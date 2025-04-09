@@ -1,1 +1,1 @@
-# AIM_Python_API
+# AIM_Websocket_Library
