@@ -1,4 +1,12 @@
 # Changelog
+## [1.0.1] - 2025-10-14
+### Changes and Fixes
+- Internal: replaced custom vexEnum with Python’s Enum; no user-facing API changes.
+- Removed vexnumber; affected APIs now accept float.
+- Moved sleep and wait to a new module vex_util (removed from vex_types).
+- Color class updated to accept web color strings.
+- Updated move_with_vectors parameter order to the latest specification.
+- Minor typos and docstring formatting issues for improved autocomplete tooltip suggestions in VSCode
 
 ## [1.0.0] - 2025-04-11
 ### Features

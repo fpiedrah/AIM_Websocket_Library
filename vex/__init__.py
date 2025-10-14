@@ -15,3 +15,4 @@ Modules exposed:
 
 from .aim import *
 from .vex_types import *
+from .vex_util import *

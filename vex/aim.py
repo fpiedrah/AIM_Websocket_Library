@@ -32,7 +32,7 @@ from . import vex_messages as commands
 #module-specific "constant" globals
 VERSION_MAJOR = 1
 VERSION_MINOR = 0
-VERSION_BUILD = 0
+VERSION_BUILD = 1
 VERSION_BETA  = 0
 SYS_FLAGS_SOUND_PLAYING     =  1<<0
 SYS_FLAGS_IS_SOUND_DNL      =  1<<16
@@ -799,7 +799,7 @@ class Robot():
     #endregion Sensing Battery
 
     #region Motion Commands
-    def set_move_velocity(self, velocity:vex.vexnumber, units:vex.DriveVelocityPercentUnits=vex.DriveVelocityUnits.PERCENT):
+    def set_move_velocity(self, velocity:float, units:vex.DriveVelocityPercentUnits=vex.DriveVelocityUnits.PERCENT):
         """
         overrides the default velocity for all subsequent movement methods in the project.\n
         The default move velocity is 50% (100 millimeters per second)
@@ -822,7 +822,7 @@ class Robot():
 
         self.drive_speed = velocity
 
-    def set_turn_velocity(self, velocity:vex.vexnumber, units:vex.TurnVelocityPercentUnits=vex.TurnVelocityUnits.PERCENT):
+    def set_turn_velocity(self, velocity:float, units:vex.TurnVelocityPercentUnits=vex.TurnVelocityUnits.PERCENT):
         """ 
         overrides the default velocity for all subsequent turn methods in the project.\n
         The default turn velocity is 50% (75 degrees per second)
@@ -845,7 +845,7 @@ class Robot():
 
         self.turn_speed = velocity
 
-    def move_at(self, angle:vex.vexnumber, velocity=None,
+    def move_at(self, angle:float, velocity=None,
                 units:vex.DriveVelocityPercentUnits=vex.DriveVelocityUnits.PERCENT):
         """
         move indefinitely at angle (-360 to 360 degrees) at velocity (0-100) \n
@@ -871,7 +871,7 @@ class Robot():
         message = commands.MoveAt(angle, velocity,stacking_type.value)
         self.robot_send(message.to_json())
 
-    def move_for(self, distance:vex.vexnumber, angle:vex.vexnumber, velocity=None, units:vex.DriveVelocityPercentUnits=vex.DriveVelocityUnits.PERCENT, wait=True):
+    def move_for(self, distance:float, angle:float, velocity=None, units:vex.DriveVelocityPercentUnits=vex.DriveVelocityUnits.PERCENT, wait=True):
         """move for a distance (mm) at angle (-360 to 360 degrees) at velocity (PERCENT/MMPS). 
         if velocity or turn_speed is not provided, use the default set by set_move_velocity and set_turn_velocity commands"""
         if velocity is None:
@@ -904,15 +904,19 @@ class Robot():
         if wait:
             self._block_on_state(self.is_move_active)
 
-    def move_with_vectors(self, x, y, r):
+    def move_with_vectors(self, forwards, rightwards, rotation):
         """
         moves the robot using vector-based motion, combining horizontal (X-axis) and 
         vertical (Y-axis) movement and having the robot to rotate at the same time
         
-        x: X-axis velocity (in %). negative values move left and positive values move right\n
-        y: Y-axis velocity (in %). negative values move backward and positive values move forward\n
-        r: rotation velocity (in %). negative values move counter-clockwise and positive values move clockwise\n
+        forwards: Y-axis velocity (in %). negative values move backward and positive values move forward\n
+        rightwards: X-axis velocity (in %). negative values move left and positive values move right\n
+        rotation: rotation velocity (in %). negative values move counter-clockwise and positive values move clockwise\n
         """
+        x = rightwards
+        y = forwards
+        r = rotation
+
         # clip to +/- 100
         if x > 100:
             x = 100
@@ -987,7 +991,7 @@ class Robot():
         if wait:
             self._block_on_state(self.is_turn_active)
 
-    def turn_to(self, heading:vex.vexnumber, velocity=None, units:vex.TurnVelocityPercentUnits=vex.TurnVelocityUnits.PERCENT, wait=True):
+    def turn_to(self, heading:float, velocity=None, units:vex.TurnVelocityPercentUnits=vex.TurnVelocityUnits.PERCENT, wait=True):
         """turn to a heading (degrees) at velocity (deg/sec)\n
         heading can be -360 to 360"""
         if not (-360 < heading < 360):
@@ -1428,7 +1432,7 @@ class Screen():
         self.robot_instance.robot_send(message.to_json())
     #endregion Screen - Draw
     #region Screen - Emoji
-    def show_emoji(self, emoji: vex.EmojiType.EmojiType, look: vex.EmojiLookType.EmojiLookType = vex.EmojiLookType.LOOK_FORWARD):
+    def show_emoji(self, emoji: vex.EmojiType, look: vex.EmojiLookType = vex.EmojiLookType.LOOK_FORWARD):
         """Show an emoji from a list of preset emojis"""
         message = commands.ScreenShowEmoji(emoji.value, look.value)
         self.robot_instance.robot_send(message.to_json())
@@ -1723,19 +1727,21 @@ class Colordesc:
     '''### Colordesc class - a class for holding an AI vision sensor color definition
 
     #### Arguments:
-        index : The color description index (1 to 7)
-        red : the red color value
-        green : the green color value
-        blue : the blue color value
-        hangle : the range of allowable hue
-        hdsat : the range of allowable saturation
+        index: The color description index (1 to 7)
+        red: the red color value
+        green: the green color value
+        blue: the blue color value
+        hangle: the range of allowable hue
+        hdsat: the range of allowable saturation
 
     #### Returns:
         An instance of the Colordesc class
 
     #### Examples:
+    ```
         COL1 = Colordesc(1,  13, 114, 227, 10.00, 0.20)\\
         COL2 = Colordesc(2, 237,  61,  74, 10.00, 0.20)\\
+    ```
     '''
     def __init__(self, index, red, green, blue, hangle, hdsat):
         self.id = index
@@ -1750,21 +1756,24 @@ class Codedesc:
     '''### Codedesc class - a class for holding AI vision sensor codes
 
     A code description is a collection of up to five AI vision color descriptions.
+
     #### Arguments:
-        index : The code description index (1 to 5)
-        c1 : An AI vision Colordesc
-        c1 : An AI vision Colordesc
-        c3 (optional) : An AI vision Colordesc
-        c4 (optional) : An AI vision Colordesc
-        c5 (optional) : An AI vision Colordesc
+        index: The code description index (1 to 5)
+        c1: An AI vision Colordesc
+        c1: An AI vision Colordesc
+        c3 (optional): An AI vision Colordesc
+        c4 (optional): An AI vision Colordesc
+        c5 (optional): An AI vision Colordesc
 
     #### Returns:
         An instance of the Codedesc class
 
     #### Examples:
+    ```
         COL1 = Colordesc(1,  13, 114, 227, 10.00, 0.20)\\
         COL2 = Colordesc(2, 237,  61,  74, 10.00, 0.20)\\
         C1 = Codedesc( 1, COL1, COL2 )
+    ```
     '''
     def __init__(self, index, c1:Colordesc, c2:Colordesc, *args):
         self.id = index
@@ -1777,14 +1786,17 @@ class Tagdesc:
     '''### Tagdesc class - a class for holding AI vision sensor tag id
 
     A tag description holds an apriltag id
+
     #### Arguments:
-        id : The apriltag id (positive integer, not 0)
+        id: The apriltag id (positive integer, not 0)
 
     #### Returns:
         An instance of the Tagdesc class
 
     #### Examples:
+    ```
         T1 = Tagdesc( 23 )
+    ```
     '''
     def __init__(self, index):
         self.id = index
@@ -1803,15 +1815,18 @@ class Tagdesc:
 class AiObjdesc:
     '''### AiObjdesc class - a class for holding AI vision sensor AI object id
 
-    A tag description holds an apriltag id
+    An AI Object description holds an AI object class id
+
     #### Arguments:
-        id : The AI Object (model) id (positive integer, not 0)
+        id: The AI Object (model) id (positive integer, not 0)
 
     #### Returns:
         An instance of the AiObjdesc class
 
     #### Examples:
+    ```
         A1 = AiObjdesc( 2 )
+    ```
     '''
     def __init__(self, index):
         self.id = index
@@ -1874,21 +1889,23 @@ class AiVision():
         An empty tuple is returned if no matching objects are detected.
         
         #### Arguments:
-            type : A color, code or other object type
-            count (optional) : the maximum number of objects to obtain.  default is 8.
+            type: A color, code or other object type
+            count (optional): the maximum number of objects to obtain.  default is 8.
 
         #### Returns:
             tuple of AiVisionObject, this will be an empty tuple if nothing is available.
 
         #### Examples:
-            #### look for and return 1 object matching COL1
+        ```
+            # look for and return 1 object matching COL1
             objects = robot.vision.get_data(COL1)
 
-            #### look for and return a maximum of 4 objects matching SIG_1
+            # look for and return a maximum of 4 objects matching SIG_1
             objects = robot.vision.get_data(COL1, 4)
 
-            #### return apriltag objects
+            # return apriltag objects
             objects = robot.vision.get_data(ALL_TAGS, AIVISION_MAX_OBJECTS)
+        ```
         '''
         match_tuple=None
         if isinstance(type, Colordesc):
@@ -2034,7 +2051,7 @@ class AiVision():
         '''### Enable or disable apriltag processing
 
         #### Arguments:
-            enable : True or False
+            enable: True or False
 
         #### Returns:
             None
@@ -2046,8 +2063,8 @@ class AiVision():
         '''### Enable or disable color and code object processing
 
         #### Arguments:
-            enable : True or False
-            merge (optional) : True to enable merging of adjacent color detections
+            enable: True or False
+            merge (optional): True to enable merging of adjacent color detections
 
         #### Returns:
             None
@@ -2059,7 +2076,7 @@ class AiVision():
         '''### Enable or disable AI model object processing
 
         #### Arguments:
-            enable : True or False
+            enable: True or False
 
         #### Returns:
             None
@@ -2251,7 +2268,9 @@ class Timer:
         An instance of the Timer class
 
     #### Examples:
+    ```
         t1 = Timer()
+    ```
     '''
     def __init__(self):
         self.start_time = time.time()
@@ -2260,7 +2279,7 @@ class Timer:
         '''### return the current time for this timer
 
         #### Arguments:
-            units (optional) : the units that the time should be returned in, default is MSEC
+            units (optional): the units that the time should be returned in, default is MSEC
 
         #### Returns:
             An the current time in specified units.
@@ -2294,19 +2313,21 @@ class Timer:
         '''### register a function to be called in the future
 
         #### Arguments:
-            callback : A function that will called after the supplied delay
-            delay : The delay before the callback function is called.
-            arg (optional) : A tuple that is used to pass arguments to the function.
+            callback: A function that will called after the supplied delay
+            delay: The delay before the callback function is called.
+            arg (optional): A tuple that is used to pass arguments to the function.
 
         #### Returns:
             None
 
         #### Examples:
+        ```
             def foo(arg):
                 print('timer has expired ', arg)
 
             t1 = Timer()\\
             t1.event(foo, 1000, ('Hello',))
+        ```
         '''
         def delayed_call():
             time.sleep(delay / 1000)
@@ -2322,4 +2343,3 @@ class Thread():
         else:
             self.t = threading.Thread(target=func)
         self.t.start()
-    

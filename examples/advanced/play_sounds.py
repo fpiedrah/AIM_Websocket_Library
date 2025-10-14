@@ -15,10 +15,9 @@ import sys
 import os
 import time
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))) #use of abspath is necessary if Python < 3.9
-from vex import aim
-from vex import vex
+from vex import *
 
-def test_play_sound_file(robot: aim.Robot, file):
+def test_play_sound_file(robot: Robot, file):
     """
     Play the specified file and wait until it is finished
     """
@@ -27,12 +26,12 @@ def test_play_sound_file(robot: aim.Robot, file):
     robot.sound.play_local_file(filepath)
     while robot.sound.is_active():
         print("playing sound file")
-        vex.sleep(100)
+        sleep(100)
     print("finished")
-    vex.sleep(500)
+    sleep(500)
 
 NOTE_TIME    = 1000
-def test_beethoven(robot: aim.Robot):
+def test_beethoven(robot: Robot):
     """
     Play the first few notes from Beethoven's Symphony No. 5.
     """
@@ -40,14 +39,14 @@ def test_beethoven(robot: aim.Robot):
     play_note_and_wait(robot, "G5",  NOTE_TIME/4, volume=60)
     play_note_and_wait(robot, "G5",  NOTE_TIME/4, volume=60)
     play_note_and_wait(robot, "Eb5", NOTE_TIME,   volume=60)
-    
-    vex.sleep(NOTE_TIME/4)
+
+    sleep(NOTE_TIME/4)
     play_note_and_wait(robot, "F5",  NOTE_TIME/4, volume=60)
     play_note_and_wait(robot, "F5",  NOTE_TIME/4, volume=60)
     play_note_and_wait(robot, "F5",  NOTE_TIME/4, volume=60)
     play_note_and_wait(robot, "D5",  NOTE_TIME*2)
 
-    vex.sleep(NOTE_TIME/4)
+    sleep(NOTE_TIME/4)
     play_note_and_wait(robot, "G5",  NOTE_TIME/4, volume=20)
     play_note_and_wait(robot, "G5",  NOTE_TIME/4, volume=20)
     play_note_and_wait(robot, "G5",  NOTE_TIME/4, volume=20)
@@ -65,7 +64,7 @@ def test_beethoven(robot: aim.Robot):
     play_note_and_wait(robot, "C6",  NOTE_TIME*0.75, volume=20)
 
 
-def play_note_and_wait(robot: aim.Robot, note: str, duration: int, volume: int = 50):
+def play_note_and_wait(robot: Robot, note: str, duration: int, volume: int = 50):
     """
     Play the specified note on AIM and for the specified duration.
     """
@@ -75,7 +74,7 @@ def play_note_and_wait(robot: aim.Robot, note: str, duration: int, volume: int =
         time_elapsed = time.time() - start_time
         if time_elapsed*1000 > duration+3: # limit gap between notes for more seamless playback
             break
-        vex.sleep(10)
+        sleep(10)
 
 class TestSoundFile(AimExampleBase):
     def __init__(self):

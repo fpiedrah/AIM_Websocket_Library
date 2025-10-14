@@ -5,7 +5,7 @@
 from setuptools import setup, find_packages
 setup(
     name='vex',
-    version='1.0.0',
+    version='1.0.1',
     packages=find_packages(where='./vex'),
     package_dir={'': '.'},
     install_requires=[
