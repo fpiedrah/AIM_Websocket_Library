@@ -27,8 +27,10 @@ classifiers = [
 dependencies = [
     "websocket-client",
     "opencv-python",
-    "pyaudio",
 ]
+
+[project.optional-dependencies]
+audio = ["pyaudio"]
 
 [project.urls]
 Homepage = "https://github.com/VEX-Robotics/AIM_Python_API"

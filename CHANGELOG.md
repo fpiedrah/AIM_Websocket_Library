@@ -7,10 +7,12 @@
 - Added UV package manager support with lock file management
 - Moved `utils/` directory into `vex` package for proper distribution
 - Removed legacy `setup.py` and `requirements.txt` files
+- Made `pyaudio` an optional dependency (install with `vex[audio]`)
 
 ### Added
 - UV installation instructions in README.md
 - Support for UV lock file management (`uv.lock`)
+- Optional dependencies group for audio features (`[audio]` extra)
 
 ### Previous Changes and Fixes (from earlier 1.0.1 release)
 - Internal: replaced custom vexEnum with Python’s Enum; no user-facing API changes.

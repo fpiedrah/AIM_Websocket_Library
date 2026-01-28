@@ -27,10 +27,16 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 # Install the VEX AIM WebSocket library
 uv pip install vex
 
+# Install with audio support (optional)
+uv pip install vex[audio]
+
 # Or install from source in development mode
 git clone https://github.com/VEX-Robotics/AIM_Websocket_Library.git
 cd AIM_Websocket_Library
 uv pip install -e .
+
+# Install from source with audio support
+uv pip install -e ".[audio]"
 ```
 
 ### Using pip
@@ -38,10 +44,22 @@ uv pip install -e .
 ```bash
 pip install vex
 
+# Install with audio support (optional)
+pip install vex[audio]
+
 # Or from source
 git clone https://github.com/VEX-Robotics/AIM_Websocket_Library.git
 cd AIM_Websocket_Library
 pip install -e .
+
+# Install from source with audio support
+pip install -e ".[audio]"
+```
+
+### Optional Dependencies
+
+- **audio**: Adds `pyaudio` for audio streaming features. Install with `vex[audio]` if you need audio capabilities.
+  - **Note**: PyAudio can be challenging to install on some systems. If you encounter issues, see the [PyAudio installation guide](https://people.csail.mit.edu/hubert/pyaudio/).
 ```
 
 ## Documentation
