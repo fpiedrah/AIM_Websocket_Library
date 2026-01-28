@@ -14,6 +14,36 @@
 - **Camera**: Streaming images from the robot's camera for implementing computer vision applications on the client side.
 - **Event Handling**: Register callbacks for screen presses, crashes, and timers.
 
+## Installation
+
+### Using UV (Recommended)
+
+[UV](https://github.com/astral-sh/uv) is a fast Python package installer and resolver.
+
+```bash
+# Install UV if you haven't already
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Install the VEX AIM WebSocket library
+uv pip install vex
+
+# Or install from source in development mode
+git clone https://github.com/VEX-Robotics/AIM_Websocket_Library.git
+cd AIM_Websocket_Library
+uv pip install -e .
+```
+
+### Using pip
+
+```bash
+pip install vex
+
+# Or from source
+git clone https://github.com/VEX-Robotics/AIM_Websocket_Library.git
+cd AIM_Websocket_Library
+pip install -e .
+```
+
 ## Documentation
 
 For instructions on setting up the library, connecting the robot over Wi-Fi, and exploring the full API, refer to the [AIM WebSocket API pages](https://api.vex.com/aim/home/websocket/index.html).

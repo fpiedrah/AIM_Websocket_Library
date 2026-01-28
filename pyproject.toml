@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vex"
+version = "1.0.1"
+description = "VEX AIM WebSocket Python Client"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "Charlie Didear", email = "charlie_didear@innovationfirst.com"},
+    {name = "James Pearman", email = "james_pearman@innovationfirst.com"},
+    {name = "Levi Pope", email = "levi_pope@innovationfirst.com"},
+    {name = "Raj Balasubramanian", email = "raj@vex.com"},
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "websocket-client",
+    "opencv-python",
+    "pyaudio",
+]
+
+[project.urls]
+Homepage = "https://github.com/VEX-Robotics/AIM_Python_API"
+Repository = "https://github.com/VEX-Robotics/AIM_Python_API"
+Documentation = "https://api.vex.com/aim/home/websocket/index.html"
+Issues = "https://github.com/VEX-Robotics/AIM_Websocket_Library/issues"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+vex = ["**/*"]

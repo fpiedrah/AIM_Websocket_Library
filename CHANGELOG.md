@@ -1,6 +1,18 @@
 # Changelog
-## [1.0.1] - 2025-10-14
-### Changes and Fixes
+## [1.0.1] - 2025-01-28
+### Changed
+- Migrated to modern `pyproject.toml` packaging (PEP 621 compliant)
+- Restructured project to use `src/` layout for better packaging practices
+- Consolidated all dependencies into `pyproject.toml`
+- Added UV package manager support with lock file management
+- Moved `utils/` directory into `vex` package for proper distribution
+- Removed legacy `setup.py` and `requirements.txt` files
+
+### Added
+- UV installation instructions in README.md
+- Support for UV lock file management (`uv.lock`)
+
+### Previous Changes and Fixes (from earlier 1.0.1 release)
 - Internal: replaced custom vexEnum with Python’s Enum; no user-facing API changes.
 - Removed vexnumber; affected APIs now accept float.
 - Moved sleep and wait to a new module vex_util (removed from vex_types).

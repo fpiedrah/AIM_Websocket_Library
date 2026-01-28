@@ -6,3 +6,15 @@ venv/
 .venv/
 */venv/
 */.venv/
+
+# UV package manager
+.uv/
+uv.lock
+
+# Python build artifacts
+dist/
+build/
+*.egg-info/
+__pycache__/
+*.pyc
+*.pyo
